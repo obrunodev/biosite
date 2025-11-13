@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Meus links{% endblock title %}
+
+{% block content %}
+
+    <ul>
+        {% for link in links %}
+            <li>
+                <a
+                    href="{% url "links:redirect_to" link.short_link %}"
+                    target="_blank">
+                    {{ link.title }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock content %}
