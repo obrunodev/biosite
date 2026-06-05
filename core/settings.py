@@ -75,3 +75,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = 'links:login'
+LOGIN_REDIRECT_URL = 'links:manage'
+LOGOUT_REDIRECT_URL = 'links:login'

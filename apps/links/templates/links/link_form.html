@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}{% if object %}Editar link{% else %}Novo link{% endif %}{% endblock title %}
+
+{% block content %}
+    <div class="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+        <div class="w-full max-w-lg bg-white rounded-xl shadow-md p-8">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">
+                {% if object %}Editar link{% else %}Novo link{% endif %}
+            </h1>
+
+            <form method="post" class="space-y-5">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    <div>
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            {{ field.label }}
+                        </label>
+                        {% if field.field.widget.input_type == 'checkbox' %}
+                            <div class="flex items-center gap-2">
+                                {{ field }}
+                                <span class="text-sm text-gray-500">Link visível na bio pública</span>
+                            </div>
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
+                        {% if field.help_text %}
+                            <p class="text-xs text-gray-400 mt-1">{{ field.help_text }}</p>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <p class="text-sm text-red-600 mt-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                {% for error in form.non_field_errors %}
+                    <p class="text-sm text-red-600">{{ error }}</p>
+                {% endfor %}
+
+                <div class="flex gap-3 pt-2">
+                    <button type="submit" class="flex-1 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">
+                        Salvar
+                    </button>
+                    <a href="{% url 'links:manage' %}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        input[type="text"], input[type="url"] {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+        input[type="text"]:focus, input[type="url"]:focus {
+            outline: none;
+            ring: 2px;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+        }
+        input[type="checkbox"] {
+            width: 1rem;
+            height: 1rem;
+            accent-color: #4f46e5;
+        }
+    </style>
+{% endblock content %}

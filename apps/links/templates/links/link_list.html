@@ -22,7 +22,7 @@
             {% for link in links %}
                 <li class="group">
                     <a
-                        href="{% url "links:redirect_to" link.short_link %}"
+                        href="{% url "links:slug_or_redirect" link.short_link %}"
                         target="_blank"
                         class="block w-full p-4 bg-white text-center text-lg font-semibold text-gray-700 rounded-xl shadow-md transition duration-300 ease-in-out
                             hover:bg-indigo-600 hover:text-white hover:shadow-lg

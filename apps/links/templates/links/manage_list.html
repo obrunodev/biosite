@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar links{% endblock title %}
+
+{% block content %}
+    <div class="min-h-screen bg-gray-50 p-6">
+        <div class="max-w-3xl mx-auto">
+            <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Meus links</h1>
+                    <p class="text-gray-500 mt-1">
+                        Sua bio pública:
+                        <a href="{% url 'links:slug_or_redirect' bio_page.slug %}" class="text-indigo-600 hover:underline" target="_blank">
+                            /{{ bio_page.slug }}/
+                        </a>
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <a href="{% url 'links:bio_slug' %}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                        Editar slug
+                    </a>
+                    <a href="{% url 'links:create' %}" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">
+                        Novo link
+                    </a>
+                    <form method="post" action="{% url 'links:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                            Sair
+                        </button>
+                    </form>
+                </div>
+            </header>
+
+            {% if links %}
+                <ul class="space-y-3">
+                    {% for link in links %}
+                        <li class="bg-white rounded-xl shadow-md p-4 flex flex-col sm:flex-row sm:items-center gap-4">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <h2 class="font-semibold text-gray-800 truncate">{{ link.title }}</h2>
+                                    {% if not link.is_active %}
+                                        <span class="px-2 py-0.5 text-xs font-medium bg-gray-200 text-gray-600 rounded-full">Inativo</span>
+                                    {% endif %}
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1 truncate">
+                                    /{{ link.short_link }}/ → {{ link.redirect_to }}
+                                </p>
+                                <p class="text-sm text-indigo-600 mt-1 font-medium">
+                                    {{ link.clicks }} clique{{ link.clicks|pluralize }}
+                                </p>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <a href="{% url 'links:update' link.pk %}" class="px-3 py-1.5 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100">
+                                    Editar
+                                </a>
+                                <form method="post" action="{% url 'links:toggle_active' link.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="px-3 py-1.5 text-sm font-medium text-amber-700 bg-amber-50 rounded-lg hover:bg-amber-100">
+                                        {% if link.is_active %}Desativar{% else %}Ativar{% endif %}
+                                    </button>
+                                </form>
+                                <a href="{% url 'links:delete' link.pk %}" class="px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100">
+                                    Excluir
+                                </a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="bg-white rounded-xl shadow-md p-8 text-center">
+                    <p class="text-gray-500">Você ainda não tem links cadastrados.</p>
+                    <a href="{% url 'links:create' %}" class="inline-block mt-4 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">
+                        Criar primeiro link
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}
